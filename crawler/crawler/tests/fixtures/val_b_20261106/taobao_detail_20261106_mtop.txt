@@ -1,0 +1,1 @@
+mtopjsonp1({"data":{"item":{"itemId":"973302041506","title":"树脂公仔盲盒定制玩偶q版手办动漫高端潮玩IP吉祥物手机支架摆件","shopId":"0","sellerId":"RAzN8HWZ4PPsXKMTeWML9SvnM9W1z2uNCvcEFRxArWaHUruoiMt","nick":"国工树脂实业","rateInfo":{"commentCount":"2.3万+"},"sales":"30人付款","picUrl":"https://img.alicdn.com/imgextra/i3/3878627212/O1CN01sjTtkb2399V3CzdVK_!!3878627212.jpg"}}})

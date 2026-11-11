@@ -1,0 +1,144 @@
+# Windows 10 本机采集 profile（Xuan）
+# 用法：python -m crawler <login|check-login|run> ... --config .\config\windows.yaml
+# 三平台均使用真实 Chrome（browser.mode=cdp），不依赖 Playwright 自带浏览器；
+# Windows 不需要 DISPLAY/X server。
+config_version: "2026-11-06.win2"
+caliber_version: "v1.0"
+
+platforms:
+  taobao: {enabled: true}
+  jd:     {enabled: true}
+  "1688": {enabled: true}
+  pdd:    {enabled: false}
+
+# ---------- 浏览器：三平台真实 Chrome / CDP ----------
+# 每平台独立 user-data-dir：profiles/<platform>-chrome
+# 每平台独立调试端口：taobao=9222, jd=9223, 1688=9224
+browser:
+  mode: cdp
+  platform_modes:
+    taobao: cdp
+    jd:     cdp
+    "1688": cdp
+  port: 9222
+  ports:
+    taobao: 9222
+    jd:     9223
+    "1688": 9224
+  # Windows 原生窗口不使用 DISPLAY。
+  display: null
+  # null = 依次查找 Program Files / Program Files (x86) / %LOCALAPPDATA% 的
+  # chrome.exe，找不到时用 Microsoft Edge 兜底。
+  chrome_executable: "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+  startup_timeout_seconds: 30
+  poll_interval_seconds: 0.3
+
+# ---------- 委托 IP（示例占位；真实资料由 Xuan 补充） ----------
+ips:
+  - code: huluxiongdi
+    name: 葫芦兄弟
+    aliases: [葫芦娃, 葫芦七兄弟]
+    variants: [葫芦宝宝]
+  - code: heimaojingzhang
+    name: 黑猫警长
+    aliases: []
+    variants: []
+  - code: yeluoli
+    name: 叶罗丽
+    aliases: [叶罗丽精灵梦]
+    variants: []
+  - code: wuhuang
+    name: 吾皇
+    aliases: [吾皇万睡, 巴扎黑]
+    variants: []
+
+# ---------- 采集 / 登录 / 节流 ----------
+crawl:
+  # 数量字段仅保留旧配置兼容；正式采集逐页推进，全部缺字段商品逐条补采。
+  max_pages: 0
+  daily_max_pages: 0
+  max_items_per_keyword: 0
+  # ---------- 淘宝/天猫请求间隔（控制速度，不限制采集总量） ----------
+  taobao:
+    max_keywords_per_run: 0
+    max_pages: 0
+    rate_limit:
+      requests_per_minute: 3           # 8 -> 3
+      page_interval_seconds: [30, 50]  # [12,25] -> [30,50] 秒
+      keyword_interval_seconds: [180, 300]  # [60,120] -> [180,300] 秒
+      detail_interval_seconds: [45, 90]     # [15,30] -> [45,90] 秒
+    detail:
+      enabled: true
+      detail_min_text_score: 60        # 35 -> 60（低于阈值不打开详情）
+      max_per_run: 0                   # 所有缺字段商品均补采，不抽样截断
+      complete_missing_amount: true    # 工作台补采覆盖全部缺字段商品
+      filter_by_score: true            # 有列表 JSONL 时按分数过滤
+      allow_unscored: false            # 有列表但 ID 无分数时跳过；仅当天无列表数据的人工 ID 保留
+    batch:
+      size: 4                          # 每批 4 个关键词
+      rest_seconds: 1800               # 批间休息 30 分钟
+      segments_per_day: 0
+      max_pages_per_segment: 0
+      max_items_per_segment: 0
+    risk:
+      empty_result_streak: 2           # 新增：连续 2 次空结果立即停，不重试
+  # 1688：缺字段逐条补采；店名优先详情页、失败再店铺页。
+  # 复用 rate_limit.detail_interval_seconds，不以固定候选数提前结束。
+  ali1688:
+    scroll_steps: 3
+    scroll_wait_ms: 600
+    shop_name_backfill:
+      enabled: true
+      max_per_run: 0                   # 全部缺店名候选
+      source: auto                     # auto/detail/shop
+  rate_limit:
+    requests_per_minute: 8
+    page_interval_seconds: [12, 25]
+    keyword_interval_seconds: [60, 120]
+    detail_interval_seconds: [15, 30]
+  retry:
+    attempts: 3
+    backoff_seconds: [5, 15, 45]
+    jitter_seconds: 0
+  # 三平台详情补采均启用。
+  detail:
+    enabled: true
+    platforms:
+      taobao: true
+      jd: true
+      "1688": true
+    # 下次 WU 运行时把前 2 个淘宝/天猫详情页的原始响应存到 logs/debug。
+    debug_capture_limit: 2
+    debug_capture_platforms: [taobao]
+    detail_wait_ms_range: [2500, 4500]
+  timeout_ms: 30000
+  page_wait_ms: 1500
+  # 页面停留时间随机区间（毫秒）；固定值只作兼容回退。
+  page_wait_ms_range: [1500, 4000]
+  parallel_platforms: true
+  timezone: Asia/Shanghai
+  headless: false
+  keyword_hit_warn_ratio: 0.2
+  jd_scroll_steps: 6
+  jd_scroll_wait_ms: 800
+  jd_price_wait_ms: 6000
+  image:
+    enabled: true
+    max_bytes: 15728640
+    timeout_seconds: 20
+  keywords: []
+  output_dir: ./out
+  log_dir: ./logs
+  state_dir: ./state
+
+# 安全边界（不提供开关去打开这些行为）：只复用用户本人已登录的正常浏览器。
+policy:
+  use_user_logged_in_browser: true
+  fingerprint_spoofing: false
+  mouse_trajectory_simulation: false
+  proxy_or_ip_rotation: false
+  multi_account_rotation: false
+
+security:
+  profile_dir: ./profiles/{platform}
+  profile_key_env: CLUE_PROFILE_KEY

@@ -1,0 +1,3 @@
+# 工作台运行时只使用 Python 标准库；数据库/判定/导出依赖 backend/requirements.txt。
+# 部署脚本会先安装 backend/requirements.txt。
+# 本文件保留给需要单独安装的部署环境。

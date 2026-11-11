@@ -1,0 +1,42 @@
+{
+  "data": {
+    "offerList": [
+      {
+        "offerId": "5001",
+        "subject": "葫芦兄弟 公仔 批发 印花",
+        "price": "3.50-5.20",
+        "companyName": "义乌市葫芦玩具厂",
+        "memberId": "6001",
+        "saleQuantity": "已售1000+件",
+        "commentCount": "100+条评价",
+        "picUrl": "//cbu01.alicdn.com/img/a.jpg",
+        "offerUrl": "//detail.1688.com/offer/5001.html",
+        "shopUrl": "//shop6001.1688.com",
+        "tags": ["实力商家"],
+        "tpYear": 5,
+        "category": "毛绒公仔"
+      },
+      {
+        "offerId": "5002",
+        "subject": "叶罗丽 精灵梦 玩偶 批发",
+        "price": "12.80",
+        "companyName": "广州叶罗丽供应链",
+        "memberId": "6002",
+        "saleQuantity": "2.5万+",
+        "picUrl": "//cbu01.alicdn.com/img/b.jpg",
+        "offerUrl": "//detail.1688.com/offer/5002.html",
+        "shopUrl": "//shop6002.1688.com",
+        "isGoldSupplier": true
+      },
+      {
+        "offerId": "5003",
+        "subject": "黑猫警长 贴纸 卡通",
+        "price": "0.80-1.20",
+        "companyName": "白牌文具商行",
+        "saleQuantity": "300+",
+        "picUrl": "//cbu01.alicdn.com/img/c.jpg",
+        "offerUrl": "//detail.1688.com/offer/5003.html"
+      }
+    ]
+  }
+}

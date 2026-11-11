@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>登录 · 侵权线索工作台</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <section class="auth-story" aria-label="工作台简介"><span class="brand-mark" aria-hidden="true">鉴</span><h2>让每一次判断，<br>都有据可循。</h2><p>汇集监测线索，核对商品证据，在同一个工作空间完成复核与跟进。</p><div class="auth-steps"><span>监测线索</span><span>核对依据</span><span>复核跟进</span></div></section>
+  <div class="auth-card">
+    <div class="brand">侵权线索 · 内网工作台</div>
+    <h1>登录</h1>
+    <p class="sub">账号由主管/管理员邀请创建；邀请码可在登录页下方注册。</p>
+    <div class="auth-tabs">
+      <button id="tab-login" class="active" type="button">登录</button>
+      <button id="tab-register" type="button">邀请注册</button>
+    </div>
+    <div id="msg" role="alert" aria-live="polite"></div>
+    <form id="login-form">
+      <label class="field">账号<input name="username" autocomplete="username" required></label>
+      <div style="height:10px"></div>
+      <label class="field">密码<input name="password" type="password" autocomplete="current-password" required></label>
+      <div style="height:16px"></div>
+      <button class="btn primary" style="width:100%" type="submit">登录</button>
+    </form>
+    <form id="register-form" class="hidden">
+      <label class="field">邀请码<input name="code" id="invite-code" autocomplete="off" required></label>
+      <div style="height:10px"></div>
+      <label class="field">账号<input name="username" autocomplete="username" required></label>
+      <div style="height:10px"></div>
+      <label class="field">密码（至少 8 位，含字母和数字）<input name="password" type="password" autocomplete="new-password" required></label>
+      <div style="height:10px"></div>
+      <label class="field">确认密码<input name="confirm" type="password" autocomplete="new-password" required></label>
+      <div style="height:16px"></div>
+      <button class="btn primary" style="width:100%" type="submit">注册并登录</button>
+    </form>
+    <p class="help" style="margin-top:16px">首次启动请在本机访问 <code>/setup</code> 设置唯一主管密码。内网访问不能初始化。</p>
+  </div>
+</div>
+<div class="toast-wrap" id="toasts"></div>
+<script>
+const msg = document.getElementById('msg');
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
+const tabLogin = document.getElementById('tab-login');
+const tabRegister = document.getElementById('tab-register');
+function show(text, ok){ msg.innerHTML = text ? `<div class="msg ${ok?'ok':'err'}">${escapeHtml(text)}</div>` : ''; }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function toast(text, ok){ const wrap=document.getElementById('toasts'); const el=document.createElement('div'); el.className='toast '+(ok?'ok':'err'); el.textContent=text; wrap.appendChild(el); setTimeout(()=>el.remove(), 3800); }
+function switchTab(register){
+  tabLogin.classList.toggle('active', !register); tabRegister.classList.toggle('active', register);
+  tabLogin.setAttribute('aria-pressed', String(!register)); tabRegister.setAttribute('aria-pressed', String(register));
+  document.querySelector('.auth-card h1').textContent = register ? '加入工作台' : '登录';
+  document.title = (register ? '邀请注册' : '登录') + ' · 侵权线索工作台';
+  loginForm.classList.toggle('hidden', register); registerForm.classList.toggle('hidden', !register); show('');
+}
+tabLogin.onclick=()=>switchTab(false); tabRegister.onclick=()=>switchTab(true);
+async function submitAuth(form, endpoint){
+  const button = form.querySelector('[type="submit"]');
+  if(button.disabled) return;
+  const label=button.textContent; button.disabled=true; button.textContent='正在处理…'; button.setAttribute('aria-busy','true');
+  try {
+    const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form)))});
+    const body=await res.json().catch(()=>({}));
+    if(!res.ok){ show(body.error || '请求失败，请检查输入后重试'); return; }
+    location.href='/';
+  } catch(err){ show('连接失败，请检查网络后重试，填写的内容已保留。'); }
+  finally { button.disabled=false; button.textContent=label; button.removeAttribute('aria-busy'); }
+}
+loginForm.onsubmit = async (e) => {
+  e.preventDefault(); show('');
+  await submitAuth(loginForm, '/api/login');
+};
+registerForm.onsubmit = async (e) => {
+  e.preventDefault(); show('');
+  const data = Object.fromEntries(new FormData(registerForm));
+  if(data.password !== data.confirm){ show('两次密码不一致'); return; }
+  await submitAuth(registerForm, '/api/register');
+};
+(async()=>{
+  switchTab(false);
+  try {
+  const res = await fetch('/api/bootstrap'); const b = await res.json().catch(()=>({}));
+  if(b.bootstrap_required){ location.href='/setup'; return; }
+  const invite = new URLSearchParams(location.search).get('invite');
+  if(invite){ switchTab(true); document.getElementById('invite-code').value = invite; }
+  } catch(err){ show('暂时无法连接工作台，请检查服务后刷新页面。'); }
+})();
+</script>
+</body>
+</html>

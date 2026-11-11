@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>首次初始化 · 侵权线索工作台</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <section class="auth-story" aria-label="初始化说明"><span class="brand-mark" aria-hidden="true">鉴</span><h2>准备好，<br>开始有序的复核。</h2><p>创建唯一主管账号后，即可建立监测档案、邀请团队，并开始第一轮线索采集。</p><div class="auth-steps"><span>设置主管</span><span>邀请团队</span><span>开始工作</span></div></section>
+  <div class="auth-card">
+    <div class="brand">侵权线索 · 内网工作台</div>
+    <h1>设置主管密码</h1>
+    <p class="sub">主管全系统唯一，可以授予/收回管理员权限。密码只保存哈希，请妥善保管。此页面只允许在 127.0.0.1 打开。</p>
+    <div id="msg" role="alert" aria-live="polite"></div>
+    <form id="setup-form">
+      <label class="field">主管账号<input name="username" value="supervisor" autocomplete="username" required></label>
+      <div style="height:10px"></div>
+      <label class="field">密码（至少 8 位，含字母和数字）<input name="password" type="password" autocomplete="new-password" required></label>
+      <div style="height:10px"></div>
+      <label class="field">确认密码<input name="confirm" type="password" autocomplete="new-password" required></label>
+      <div style="height:16px"></div>
+      <button class="btn primary" style="width:100%" type="submit">创建主管并登录</button>
+    </form>
+  </div>
+</div>
+<script>
+const msg = document.getElementById('msg');
+function show(text, ok){ msg.innerHTML = text ? `<div class="msg ${ok?'ok':'err'}">${String(text).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}</div>` : ''; }
+document.getElementById('setup-form').onsubmit = async (e) => {
+  e.preventDefault(); show('');
+  const data = Object.fromEntries(new FormData(e.target));
+  if(data.password !== data.confirm){ show('两次密码不一致'); return; }
+  const button=e.target.querySelector('button[type="submit"]');
+  if(button.disabled) return;
+  const label=button.textContent; button.disabled=true; button.textContent='正在创建…'; button.setAttribute('aria-busy','true');
+  try {
+  const res = await fetch('/api/setup', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
+  const body = await res.json().catch(()=>({}));
+  if(!res.ok){ show(body.error || '初始化失败'); return; }
+  location.href='/';
+  } catch(err){ show('连接失败，请检查网络后重试，填写的内容已保留。'); }
+  finally { button.disabled=false; button.textContent=label; button.removeAttribute('aria-busy'); }
+};
+(async()=>{ try { const b = await (await fetch('/api/bootstrap')).json().catch(()=>({})); if(!b.bootstrap_required) location.href='/login'; } catch(err){ show('暂时无法连接工作台，请检查服务后刷新页面。'); } })();
+</script>
+</body>
+</html>

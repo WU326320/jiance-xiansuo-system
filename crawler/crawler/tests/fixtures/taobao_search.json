@@ -1,0 +1,39 @@
+{
+  "data": {
+    "auctions": [
+      {
+        "nid": "1111111111",
+        "raw_title": "葫芦兄弟 印花卫衣 童装",
+        "view_price": "59.90",
+        "nick": "葫芦童装旗舰店",
+        "sellerId": "2001",
+        "view_sales": "1万+人付款",
+        "comment_count": 1200,
+        "pic_url": "//img.alicdn.com/imgextra/a.jpg",
+        "detail_url": "//item.taobao.com/item.htm?id=1111111111",
+        "category": "童装"
+      },
+      {
+        "nid": "2222222222",
+        "raw_title": "叶罗丽 精灵梦 公仔 玩偶",
+        "view_price": "39.90-49.90",
+        "nick": "叶罗丽官方旗舰店",
+        "sellerId": "2002",
+        "view_sales": "2.5万+人付款",
+        "comment_count": "100+条评价",
+        "pic_url": "//img.alicdn.com/imgextra/b.jpg",
+        "detail_url": "//detail.tmall.com/item.htm?id=2222222222",
+        "isTmall": true
+      },
+      {
+        "nid": "3333333333",
+        "raw_title": "黑猫警长 贴纸 卡通",
+        "view_price": "9.90",
+        "nick": "白牌文具商行",
+        "view_sales": "300+",
+        "pic_url": "//img.alicdn.com/imgextra/c.jpg",
+        "detail_url": "//item.taobao.com/item.htm?id=3333333333"
+      }
+    ]
+  }
+}

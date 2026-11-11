@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+.deps/
+.venv/
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/run.lock
+data/images/
+backups/*.db
+logs/*.log

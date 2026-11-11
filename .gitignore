@@ -1,0 +1,63 @@
+# Regenerable Python bytecode and analysis/test caches.
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Local, reversible cleanup quarantine; see doc/冗余清理报告_20261108.md.
+/utils/cleanup_recovery/
+
+# Virtual environments
+.venv/
+venv/
+
+# Browser login profiles (cookies / sessions)
+**/profiles/
+/profiles/
+
+# Databases and SQLite sidecars
+*.db
+*.db-shm
+*.db-wal
+*.sqlite*
+
+# Local database copies
+/database/
+
+# Runtime data directories (backend/data, workbench/data, research/data, ...)
+**/data/
+
+# Logs
+**/logs/
+*.log
+
+# Crawler runtime output and checkpoints
+crawler/out/
+crawler/state/
+/state/
+
+# Backups
+backend/backups/
+*.bak
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+
+# Real workbench config; keep examples
+workbench/config/*.yaml
+!workbench/config/*.example.yaml
+
+# Generated acceptance artifacts in doc; keep Markdown
+doc/*.png
+doc/*.json
+doc/*.log
+doc/*.csv
+doc/*.html
+doc/*.jsonl
+doc/*.xlsx
+doc/pagination_live_*
+doc/continuous_*

@@ -1,0 +1,15 @@
+# Windows 10 / Python 3.13：以下均有 cp313 win_amd64 或纯 Python wheel。
+# cdp 模式只使用本机已安装的 Chrome（connect_over_cdp），不需要
+# `playwright install` 下载 Playwright 自带浏览器；但 Scrapling 的 fetchers
+# 仍依赖 Python 包 playwright/patchright。
+scrapling[fetchers]==0.5.1
+pydantic>=2.0
+PyYAML>=6.0
+lxml>=6.1.1
+requests>=2.31
+# Windows 没有系统 IANA 时区库；crawl.timezone=Asia/Shanghai 需要 tzdata。
+tzdata>=2024.1
+
+# 测试
+pytest>=8.0
+pytest-cov>=5.0

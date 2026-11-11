@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "skills": {
+    "leibox": {
+      "source": "leibox.pantoria.cn",
+      "sourceUrl": "https://leibox.pantoria.cn",
+      "sourceType": "well-known",
+      "computedHash": "a96c6db7e9e2898d3950ad3d3147233d83d81c57103d7c4d91e1436db79a22f6",
+      "wellKnownDigest": "sha256:f6ccdd38b834490dc57696e6548d14c6668839307c87347aa01e3bcc21deb64d"
+    }
+  }
+}

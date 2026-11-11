@@ -1,0 +1,22 @@
+{
+  "platform": "1688",
+  "started_at": "2026-11-05T14:03:27.185030+08:00",
+  "ended_at": "2026-11-05T14:03:27.188139+08:00",
+  "login_ok": true,
+  "risk_blocked": false,
+  "keywords_done": 1,
+  "pages_fetched": 2,
+  "items_ok": 20,
+  "items_dropped": 0,
+  "items_duplicate": 0,
+  "drop_reasons": {},
+  "errors": [],
+  "warnings": [],
+  "screenshot_path": null,
+  "status": "ok",
+  "login_reason": null,
+  "config_version": "2026-11-05.1",
+  "caliber_version": "v1.0",
+  "output_path": "samples/2026-11-05/1688.jsonl",
+  "log_path": "samples/logs/2026-11-05_1688.log"
+}

@@ -1,0 +1,1 @@
+mtopjsonp1({"data":{"sellerId":"916148540","componentsVO":{"rateVO":{"rateInfo":{"commentCount":"1.2万+","total":"12000"}}}},"item":{"itemId":"759606896896","title":"儿童特利迦奥特曼新款迪迦发光书包","nick":"知叶玩具专营店"}})

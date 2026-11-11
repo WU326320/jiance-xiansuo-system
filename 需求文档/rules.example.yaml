@@ -1,0 +1,158 @@
+# 电商侵权线索检测 规则配置（示例）
+# 修改口径只改本文件；每次修改请递增 config_version
+config_version: "2026-11-05.1"
+caliber_version: "v1.0"          # 金额口径版本，写入每条记录
+
+platforms:                       # 本轮启用平台；拼多多后续阶段再开
+  taobao: {enabled: true}        # 含天猫
+  jd:     {enabled: true}
+  "1688": {enabled: true}
+  pdd:    {enabled: false}       # 暂不做
+
+# ---------- 委托 IP（全部为示例占位，待 Xuan 提供真实资料） ----------
+ips:
+  - code: huluxiongdi
+    name: 葫芦兄弟
+    aliases: [葫芦娃, 葫芦七兄弟]          # 示例
+    variants: [葫芦宝宝]                    # 示例 变体/谐音
+    trademark: {reg_no: "示例-待提供", classes: ["示例"]}
+    copyright_reg_no: "示例-待提供"
+    reference_images: [refs/huluxiongdi/示例1.jpg]
+  - code: heimaojingzhang
+    name: 黑猫警长
+    aliases: [黑猫警长]
+    variants: []
+    trademark: {reg_no: "示例-待提供", classes: ["示例"]}
+    reference_images: [refs/heimaojingzhang/示例1.jpg]
+  - code: yeluoli
+    name: 叶罗丽
+    aliases: [叶罗丽精灵梦]
+    variants: []
+    trademark: {reg_no: "示例-待提供", classes: ["示例"]}
+    reference_images: [refs/yeluoli/示例1.jpg]
+  - code: wuhuang
+    name: 吾皇
+    aliases: [吾皇万睡, 巴扎黑]
+    variants: []
+    trademark: {reg_no: "示例-待提供", classes: ["示例"]}
+    reference_images: [refs/wuhuang/示例1.jpg]
+
+# ---------- 排除规则 ----------
+exclude:
+  genuine_keywords: [官方旗舰店, 正版授权, 品牌授权, 官方正品, 防伪]   # 命中即排除
+  genuine_shop_labels: [京东自营]          # 示例：需确认权利人是否在自营渠道
+  categories: []                           # 排除品类
+whitelist_file: whitelist.csv              # 列：platform,shop_id,ip_code,reason,active
+dedup:
+  suppress_statuses: [已确认, 已录入SaaS, 驳回]   # 这些状态的店铺不再重复上报
+  suppress_days: 90                        # 已确认/已录入SaaS 店铺的压制天数
+  suppress_days_rejected: 30               # 驳回店铺的压制天数
+legal_hints:                               # 不排除，只作为提示写入命中原因
+  - {keywords: [书评, 教程, 解析], hint: "可能涉及合理使用，请人工判断"}
+
+# ---------- 文字嫌疑分 ----------
+text_score:
+  weights:
+    ip_hit: 45            # 标题/店铺命中目标 IP 名或别名
+    variant_hit: 12       # 变体/谐音/平替词
+    carrier_hit: 16       # 图案载体词
+    category_hit: 10      # 高发品类词
+    white_label_shop: 6   # 店铺名含白牌/工厂词
+    brand_official: -25   # 品牌官方词（弱降权）
+    genuine_signal: -55   # 正版信号（未被排除时）
+    other_ip_only: -30    # 未命中目标 IP，只命中其他 IP
+    other_ip_also: -18    # 命中目标 IP 同时蹭其他 IP
+    no_ip: -8             # 无任何 IP 词
+    short_title: -20      # 标题过短
+  short_title_len: 8
+  level: {high: 60, medium: 35}
+  vision_rescue_min: 12   # 无 IP 词但分数>=此值，送视觉复核
+  words:
+    carrier: [印花, 图案, 公仔, 挂件, 手机壳, 贴纸, 徽章, 抱枕, 玩偶]
+    category: [童装, 卫衣, 睡衣, 文具, 箱包, 水杯, 床品]
+    white_label: [制衣, 服饰厂, 供应链, 工厂店, 批发, 商行]
+    brand_official: [正版, 官方]
+    other_ips: [示例其他IP]
+
+# ---------- 视觉分（主图） ----------
+visual:
+  confirm: 70             # >= 视觉确认
+  reject: 25              # <= 视觉排除；中间人工
+  reuse_by_phash: true    # 相同指纹复用结果
+
+# ---------- 综合分（只排序，不影响金额） ----------
+combined:
+  w_text: 0.45
+  w_visual: 0.55
+  floor_on_confirm: 75
+  cap_on_reject: 35
+  min_final_score: 35     # 低于此值不进入金额计算（need_vision 除外）
+
+# ---------- 金额 ----------
+amount:
+  comment_multiplier: 10              # 估算销量 = min(销量, 评论数×倍数)
+  fuzzy_use_lower_bound: true         # “1万+”按下限，计算式注明“按下限估算”
+  on_sales_missing: comments_x_multiplier   # 标记“销量缺失”
+  on_comments_missing: use_sales            # 标记“评论缺失,待核验”
+  decimals: 2
+
+# ---------- 店铺聚合 ----------
+aggregate:
+  key: [platform, shop_id]            # 不得用店铺名
+  shop_threshold: 500000              # 元，严格大于
+  same_day_only: true                 # 不跨日累计
+  count_delisted: false               # 下架不计
+
+# ---------- 详情页抓取策略 ----------
+fetch:
+  taobao:
+    detail_min_text_score: 35         # 文字初筛过线才抓详情取评论数
+  jd:
+    near_band_low: 0.6                # 店铺合计在 门槛×[0.6,1.0) 时抓详情补字段
+    near_band_high: 1.0
+
+# ---------- 店铺类型归一 ----------
+shop_type_mapping:                    # 原始标签 -> 企业/个体户/个人/未知
+  天猫: 企业
+  旗舰店: 企业
+  专卖店: 企业
+  京东POP: 未知
+  1688实力商家: 企业
+  个体工商户: 个体户
+  个人店: 个人
+shop_type_priority: [企业, 个体户, 未知, 个人]
+
+# ---------- 赔付能力标签 ----------
+payment_ability:
+  signals:
+    listed_or_soe: true
+    investor_shareholder: true
+    registered_capital_min: 10000000  # 注册资本>=1000万
+    has_patent_or_app: true
+    tmall_or_crown_shop: true
+    enterprise_shop: true
+
+# ---------- 置信度 ----------
+confidence:
+  base: weighted_final_by_amount
+  adjust:
+    has_missing_field: -10
+    all_visual_confirmed: 10
+
+# ---------- 采集、登录与报警 ----------
+crawl:
+  rate_limit: {requests_per_minute: 20}
+  max_items_per_keyword: 200
+security:
+  profile_dir: "%LOCALAPPDATA%/clue/profiles/{platform}"  # Xuan Windows 本机，每平台一个 Chrome 登录态目录（CDP）
+  encryption: windows_efs                    # profile 目录 EFS 加密；SMTP 授权码存 Windows 凭据管理器
+alert:
+  min_items_per_platform: 50                 # 低于此条数报警
+  email_to: ["wuhengxuan@ip-sky.cn"]          # 报警收件人，可加多个
+  smtp: {host: "smtp.qiye.aliyun.com", port: 465, ssl: true, sender: "wuhengxuan@ip-sky.cn", auth_code_encrypted: "待 Xuan 在与后端的 1:1 中提供"}
+
+export:
+  dir: "%USERPROFILE%/Documents/侵权线索"   # Excel 输出目录
+  filename: "线索_{YYYYMMDD}.xlsx"         # 同日重跑覆盖
+schedule:
+  mode: manual                              # 不做每日定时，Xuan 手动启动

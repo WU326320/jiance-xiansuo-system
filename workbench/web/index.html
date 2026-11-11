@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#edf2f8">
+<title>侵权线索 · 内网工作台</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到工作区</a>
+<div id="app">
+  <aside class="sidebar" id="sidebar" aria-label="工作台侧栏">
+    <div class="side-brand">
+      <span class="brand-mark" aria-hidden="true">鉴</span>
+      <div><h1>侵权线索工作台</h1><div class="brand-caption">监测 · 判断 · 跟进</div></div>
+      <div class="ver" id="version">v1.0</div>
+    </div>
+    <nav class="nav" id="nav" aria-label="工作台导航"></nav>
+    <div class="side-user">
+      <span class="environment"><i aria-hidden="true"></i>内网工作空间</span>
+      <button class="profile-button" data-nav="account"><span class="avatar" aria-hidden="true">人</span><span><strong id="user-name">加载中</strong><span id="user-role" class="role">账户</span></span><span aria-hidden="true">›</span></button>
+      <button class="btn small logout" id="logout">退出登录</button>
+    </div>
+  </aside>
+  <div class="canvas">
+    <header class="topbar">
+      <button class="btn menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="展开导航">☰</button>
+      <div id="breadcrumb">工作区 / 线索复核</div>
+      <div class="topbar-actions"><time id="today"></time><button class="btn small" id="material-toggle" aria-pressed="false">降低透明度</button></div>
+    </header>
+    <main class="main" id="main" tabindex="-1"></main>
+    <footer class="workspace-footer"><span>侵权线索工作台</span><span>监测有据，复核有序</span></footer>
+  </div>
+</div>
+<button class="nav-scrim" id="nav-scrim" aria-label="关闭导航" tabindex="-1" hidden></button>
+<div id="drawer-root"></div>
+<div id="modal-root"></div>
+<div class="toast-wrap" id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

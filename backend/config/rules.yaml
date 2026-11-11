@@ -1,0 +1,164 @@
+# 电商侵权线索检测 - 后端与判定配置
+# 规则字段沿用需求文档 v0.3 / rules.example.yaml；后端只额外增加
+# paths/run/alert/payment_ability/export 节。
+# 注意：config_version 由本文件字节 sha256 前 12 位自动计算，改任何内容都会变化。
+config_version: "2026-11-06.2"
+caliber_version: "v1.0"
+
+platforms:
+  taobao: {enabled: true}        # 含天猫
+  jd:     {enabled: true}
+  "1688": {enabled: true}
+  pdd:    {enabled: false}
+
+# ---------- 委托 IP（示例占位；真实资料由 Xuan 补充） ----------
+ips:
+  - code: huluxiongdi
+    name: 葫芦兄弟
+    aliases: [葫芦娃, 葫芦七兄弟]
+    variants: [葫芦宝宝]
+    reference_images: []          # 参考图放 refs/<code>/，相对本目录或后端根目录
+  - code: heimaojingzhang
+    name: 黑猫警长
+    aliases: []
+    variants: []
+    reference_images: []
+  - code: yeluoli
+    name: 叶罗丽
+    aliases: [叶罗丽精灵梦]
+    variants: []
+    reference_images: []
+  - code: wuhuang
+    name: 吾皇
+    aliases: [吾皇万睡, 巴扎黑]
+    variants: []
+    reference_images: []
+
+# ---------- 数据库（Excel 导出模块读同一个键） ----------
+storage:
+  db_path: data/leads.db          # 默认相对 backend 根目录；路径用 pathlib 解析
+
+# ---------- 路径（相对 backend 根目录；pathlib 解析） ----------
+paths:
+  backups: backups
+  logs: logs
+  images: data/images
+  crawler_dir: ../crawler
+  crawler_config: ../crawler/config/windows.yaml
+  crawler_output_dir: ../crawler/out
+
+run:
+  lock_file: data/run.lock
+  backup_keep: 14
+  log_keep_days: 30
+  crawl_timeout_seconds: 3600
+
+alert:
+  enabled: true
+  smtp_host: smtp.qiye.aliyun.com
+  smtp_port: 465
+  smtp_ssl: true
+  from: wuhengxuan@ip-sky.cn
+  to: [wuhengxuan@ip-sky.cn]
+  min_items_per_platform: 50
+  keyring_service: ip-lead-pipeline-smtp
+  subject_prefix: "[侵权线索]"
+  timeout_seconds: 30
+
+export:
+  enabled: true                   # 主流程在聚合后、报警前调用 export_leads_excel
+  dir: ""                         # 空 = %USERPROFILE%\Documents\侵权线索
+
+# ---------- 排除规则 ----------
+exclude:
+  genuine_keywords: [官方旗舰店, 正版授权, 品牌授权, 官方正品, 防伪]
+  genuine_shop_labels: [京东自营]
+  categories: []
+whitelist_file: whitelist.csv
+
+dedup:
+  suppress_statuses: [已确认, 已录入SaaS, 驳回]
+  suppress_days: 90
+  suppress_days_rejected: 30
+
+legal_hints:
+  - {keywords: [书评, 教程, 解析], hint: "可能涉及合理使用，请人工判断"}
+
+# ---------- 文字嫌疑分 ----------
+text_score:
+  weights:
+    ip_hit: 45
+    variant_hit: 12
+    carrier_hit: 16
+    category_hit: 10
+    white_label_shop: 6
+    brand_official: -25
+    genuine_signal: -55
+    other_ip_only: -30
+    other_ip_also: -18
+    no_ip: -8
+    short_title: -20
+  short_title_len: 8
+  level: {high: 60, medium: 35}
+  vision_rescue_min: 12
+  words:
+    carrier: [印花, 图案, 公仔, 挂件, 手机壳, 贴纸, 徽章, 抱枕, 玩偶]
+    category: [童装, 卫衣, 睡衣, 文具, 箱包, 水杯, 床品]
+    white_label: [制衣, 服饰厂, 供应链, 工厂店, 批发, 商行]
+    brand_official: [正版, 官方]
+    other_ips: [示例其他IP]
+
+# ---------- 视觉分 ----------
+visual:
+  confirm: 70
+  reject: 25
+  reuse_by_phash: true
+
+# ---------- 综合分（只排序，不影响金额） ----------
+combined:
+  w_text: 0.45
+  w_visual: 0.55
+  floor_on_confirm: 75
+  cap_on_reject: 35
+  min_final_score: 35
+
+# ---------- 金额 ----------
+amount:
+  comment_multiplier: 10
+  fuzzy_use_lower_bound: true
+  on_sales_missing: comments_x_multiplier
+  on_comments_missing: use_sales
+  decimals: 2
+
+# ---------- 店铺聚合 ----------
+aggregate:
+  # 2026-11-06：平台组 + 规范化店名；shop_id 只用于同名不同店拆分。
+  key: [platform_group, shop_name]
+  shop_threshold: 500000
+  same_day_only: true
+  count_delisted: false
+
+fetch:
+  taobao:
+    detail_min_text_score: 60
+  jd:
+    near_band_low: 0.6
+    near_band_high: 1.0
+
+# ---------- 赔付能力标签（本轮只实现平台可得信号） ----------
+payment_ability:
+  signals:
+    - {label: 企业, keyword: 企业}
+    - {label: 天猫店, keyword: 天猫}
+    - {label: 旗舰店, keyword: 旗舰店}
+    - {label: 皇冠店, keyword: 皇冠}
+    - {label: 实力商家, keyword: 实力商家}
+    - {label: 上市/国企, keyword: 上市}
+    - {label: 上市/国企, keyword: 国企}
+
+shop_type_mapping:
+  天猫: 企业
+  旗舰店: 企业
+  专卖店: 企业
+  京东POP: 未知
+  1688实力商家: 企业

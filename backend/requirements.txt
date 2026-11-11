@@ -1,0 +1,10 @@
+# 后端运行依赖（与采集模块共用 ../crawler/.venv）
+SQLAlchemy>=2.0,<2.1
+alembic>=1.13
+PyYAML>=6.0
+keyring>=25.0
+imagehash>=4.3
+Pillow>=10.0
+openpyxl>=3.1
+# 测试
+pytest>=8.0

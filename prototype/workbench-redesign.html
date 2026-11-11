@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>线索复核 · 工作台设计预览</title>
+<link rel="stylesheet" href="workbench-redesign.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到工作区</a>
+<div class="preview"><span><b>设计预览</b> · 演示数据，操作不会影响业务</span><div><label>预览角色 <select id="role"><option value="supervisor">主管</option><option value="admin">管理员</option><option value="user">普通用户</option></select></label><button data-act="guide">原型导览</button><button data-act="reset">重置演示</button></div></div>
+<div class="workspace">
+<aside id="sidebar"><a class="brand" href="#leads"><span class="mark">鉴</span><span><b>侵权线索工作台</b><small>监测 · 判断 · 跟进</small></span></a><nav id="nav" aria-label="主导航"></nav><div class="profile"><span class="env">● 独立设计原型</span><button data-act="account"><span class="avatar">林</span><span><b>林知远</b><small id="role-name">主管</small></span><span>↗</span></button><button class="logout" data-act="logout">退出登录</button></div></aside>
+<div class="canvas"><header><button class="menu" data-act="menu" aria-label="展开导航" aria-expanded="false">☰</button><div id="crumb">工作区 / 线索复核</div><div class="header-right"><span>2026年11月8日</span><button class="icon" data-act="guide" aria-label="打开原型导览">?</button></div></header><main id="main" tabindex="-1"></main><footer>侵权线索工作台<span>设计方案 v1 · 待确认</span></footer></div>
+</div><dialog id="modal" aria-labelledby="modal-title"></dialog><div id="toasts" role="status" aria-live="polite"></div>
+<script src="workbench-redesign.js"></script>
+</body></html>

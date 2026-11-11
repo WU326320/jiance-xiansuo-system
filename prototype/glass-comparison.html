@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>玻璃工作台 · 视觉精修对比</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#edf2f8;color:#20334b;font:16px/1.6 "Segoe UI","Microsoft YaHei",sans-serif}header{padding:32px max(24px,4vw);background:#ffffffad;border-bottom:1px solid white}h1{font-size:28px;margin:0 0 8px}p{margin:8px 0;color:#52647b}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}button,a{font:inherit;border:1px solid #cbd9ec;padding:10px 16px;border-radius:10px;background:white;color:#205ec8;text-decoration:none;cursor:pointer}button[aria-pressed=true]{background:#205ec8;color:white;border-color:#205ec8}:focus-visible{outline:3px solid #477cc6;outline-offset:3px}main{padding:24px max(20px,3vw)}.pair{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}figure{margin:0;border-radius:16px;overflow:hidden;background:white;box-shadow:0 12px 30px #335b8612;border:1px solid white}figcaption{padding:16px 20px;border-bottom:1px solid #dde6f2;font-weight:600}figcaption small{display:block;font-size:14px;font-weight:400;color:#52647b}img{display:block;width:100%;height:auto}.mobile figure{max-width:420px;width:100%;justify-self:center}.notes{margin:24px 0;padding:20px;background:#ffffffbf;border-radius:14px}.notes ul{margin:8px 0;padding-left:24px}@media(max-width:700px){.pair{grid-template-columns:1fr}h1{font-size:24px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><h1>同一工作台，更清晰的材质与秩序</h1><p>保留玻璃拟态、业务内容与操作路径。以下为同一组演示数据、相同屏幕尺寸的 Edge 实拍。选择“本轮材质对比”可直接比较透光与边缘厚度的变化。</p><div class="actions"><button id="desktop" aria-pressed="true">桌面对比 · 1440px</button><button id="mobile" aria-pressed="false">手机对比 · 390px</button><button id="material" aria-pressed="false">本轮材质对比</button><a href="workbench-glass.html#leads">打开可交互原型 ↗</a></div></header>
+<main><div class="pair" id="pair"><figure><figcaption>优化前<small>原玻璃版</small></figcaption><img id="before" src="glass-before-leads.png" alt="优化前的玻璃工作台桌面完整截图"></figure><figure><figcaption>优化后<small>统一导航图标、压缩重复留白、强化数字与操作辨识</small></figcaption><img id="after" src="glass-leads-1440.png" alt="优化后的玻璃工作台桌面完整截图"></figure></div><section class="notes"><b>可检查的调整</b><ul><li>导航图标统一为淡蓝玻璃底，移除混杂的彩色块。</li><li>筛选与结果区间距收紧；表格使用稳定行距和统一列内对齐。</li><li>金额采用等宽数字，复核入口采用统一按钮样式。</li><li>手机卡片将选择框放在右上角，减少重复字段标签，保持原内容和入口。</li><li>复核详情的证据数据分组呈现，人工复核区层级更清楚。</li></ul><p>这份对比只用于原型确认，不代表已替换正式前端。</p></section></main>
+<script>
+const views={desktop:['glass-before-leads.png','glass-leads-1440.png'],mobile:['glass-before-mobile.png','glass-leads-390.png'],material:['glass-material-before.png','glass-leads-1440.png']};
+for(const name of Object.keys(views))document.getElementById(name).onclick=()=>{for(const key of Object.keys(views))document.getElementById(key).setAttribute('aria-pressed',String(key===name));document.getElementById('pair').classList.toggle('mobile',name==='mobile');document.getElementById('before').src=views[name][0];document.getElementById('after').src=views[name][1];document.getElementById('before').alt='优化前的'+(name==='mobile'?'手机':'桌面')+'完整截图';document.getElementById('after').alt='优化后的'+(name==='mobile'?'手机':'桌面')+'完整截图';};
+</script>
+</body></html>

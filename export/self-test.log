@@ -1,0 +1,46 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0 -- /workspace/ip-monitor/crawler/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/ip-monitor/export
+configfile: pytest.ini
+testpaths: tests
+plugins: cov-7.1.0, anyio-4.16.0
+collecting ... collected 35 items
+
+tests/test_backend_integration.py::test_export_against_database_built_from_backend_views PASSED [  2%]
+tests/test_export.py::test_c9_three_sheets_and_complete_headers PASSED   [  5%]
+tests/test_export.py::test_c9_review_columns_are_empty_even_if_view_has_values PASSED [  8%]
+tests/test_export.py::test_c9_thumbnail_embedded_and_about_80px PASSED   [ 11%]
+tests/test_export.py::test_c9_original_and_product_links_clickable PASSED [ 14%]
+tests/test_export.py::test_c9_missing_and_empty_image_cells_stay_blank PASSED [ 17%]
+tests/test_export.py::test_c10_hit_reasons_summary_and_links_non_empty PASSED [ 20%]
+tests/test_export.py::test_all_required_fields_present_with_data PASSED  [ 22%]
+tests/test_export.py::test_sorting_shop_type_then_confidence_then_amount PASSED [ 25%]
+tests/test_export.py::test_lead_id_format_platform_yyyymmdd_sequence PASSED [ 28%]
+tests/test_export.py::test_snapshot_date_filter_excludes_other_days PASSED [ 31%]
+tests/test_export.py::test_amounts_use_two_decimal_number_format_without_recalculation PASSED [ 34%]
+tests/test_export.py::test_filename_directory_and_same_day_overwrite PASSED [ 37%]
+tests/test_export.py::test_empty_snapshot_still_generates_three_sheets PASSED [ 40%]
+tests/test_export.py::test_default_export_dir_uses_userprofile PASSED    [ 42%]
+tests/test_export.py::test_relative_db_path_and_date_format PASSED       [ 45%]
+tests/test_export.py::test_caliber_sheet_contains_formula_threshold_versions_and_disclaimer PASSED [ 48%]
+tests/test_export.py::test_caliber_uses_configured_threshold_and_view_versions PASSED [ 51%]
+tests/test_export.py::test_only_views_are_queried_and_no_writes PASSED   [ 54%]
+tests/test_export.py::test_missing_view_raises_actionable_error PASSED   [ 57%]
+tests/test_export.py::test_table_named_like_view_is_rejected PASSED      [ 60%]
+tests/test_export.py::test_missing_required_column_lists_column_name PASSED [ 62%]
+tests/test_export.py::test_invalid_snapshot_date_raises PASSED           [ 65%]
+tests/test_export.py::test_orphan_link_is_skipped_and_reported PASSED    [ 68%]
+tests/test_export.py::test_non_http_links_are_text_not_clickable PASSED  [ 71%]
+tests/test_export.py::test_formula_like_title_is_written_as_text PASSED  [ 74%]
+tests/test_export.py::test_empty_hit_reasons_are_flagged_and_reported PASSED [ 77%]
+tests/test_export.py::test_storage_db_path_config_and_default PASSED     [ 80%]
+tests/test_export.py::test_fixed_summary_headers_never_change PASSED     [ 82%]
+tests/test_export.py::test_caliber_versions_prefer_view_over_config PASSED [ 85%]
+tests/test_export.py::test_build_and_save_failures_raise_export_error PASSED [ 88%]
+tests/test_export.py::test_thumbnail_preserves_aspect_and_does_not_upscale PASSED [ 91%]
+tests/test_export.py::test_thumbnail_missing_file_returns_reason PASSED  [ 94%]
+tests/test_export.py::test_view_columns_follow_backend_plan_v011_english_names PASSED [ 97%]
+tests/test_export.py::test_relative_image_path_resolves_against_backend_root PASSED [100%]
+
+============================== 35 passed in 0.99s ==============================

@@ -1,0 +1,9 @@
+[run]
+source = crawler
+omit =
+    crawler/tests/*
+    crawler/__main__.py
+
+[report]
+show_missing = True
+skip_covered = False

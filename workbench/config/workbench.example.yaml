@@ -1,0 +1,32 @@
+# 复制为 workbench/config/workbench.yaml 后按需修改。
+server:
+  # 只允许 127.0.0.1 或本机内网 IP；禁止 0.0.0.0。
+  host: 127.0.0.1
+  port: 8765
+  open_browser: false
+
+data_dir: workbench/data
+
+security:
+  session_idle_hours: 8
+  login_lock_threshold: 5
+  login_lock_minutes: 15
+  # 只放行公司内网网段；127.0.0.1 永远允许。
+  allowed_networks:
+    - 127.0.0.1/32
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+
+paths:
+  rules: backend/config/rules.yaml
+  crawler_config: crawler/config/windows.yaml
+  # 留空则读 backend/config/rules.yaml 的 storage.db_path
+  leads_db: ""
+
+# SMTP 主机/发件人默认读 backend/config/rules.yaml 的 alert 节。
+# 授权码只放 Windows 凭据管理器：
+#   python -m pipeline setup-smtp
+smtp:
+  keyring_service: ip-lead-pipeline-smtp
+  subject_prefix: "[侵权线索]"

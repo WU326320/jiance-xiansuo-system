@@ -1,0 +1,223 @@
+config_version: 2026-11-05.1
+caliber_version: v1.0
+platforms:
+  taobao:
+    enabled: true
+  jd:
+    enabled: true
+  '1688':
+    enabled: true
+  pdd:
+    enabled: false
+browser:
+  mode: playwright
+  platform_modes:
+    jd: cdp
+  port: 9222
+  display: ":6"
+  chrome_executable: null
+  startup_timeout_seconds: 20
+  poll_interval_seconds: 0.2
+ips:
+- code: huluxiongdi
+  name: 葫芦兄弟
+  aliases:
+  - 葫芦娃
+  - 葫芦七兄弟
+  variants:
+  - 葫芦宝宝
+- code: heimaojingzhang
+  name: 黑猫警长
+  aliases: []
+  variants: []
+- code: yeluoli
+  name: 叶罗丽
+  aliases:
+  - 叶罗丽精灵梦
+  variants: []
+- code: wuhuang
+  name: 吾皇
+  aliases:
+  - 吾皇万睡
+  - 巴扎黑
+  variants: []
+crawl:
+  max_pages: 1
+  daily_max_pages: 150
+  max_items_per_keyword: 200
+  rate_limit:
+    requests_per_minute: 600
+    page_interval_seconds:
+    - 0
+    - 0
+    keyword_interval_seconds:
+    - 0
+    - 0
+    detail_interval_seconds:
+    - 0
+    - 0
+  retry:
+    attempts: 1
+    backoff_seconds:
+    - 0
+    jitter_seconds: 0
+  timeout_ms: 30000
+  page_wait_ms: 1500
+  parallel_platforms: false
+  timezone: Asia/Shanghai
+  headless: true
+  keyword_hit_warn_ratio: 0.2
+  jd_scroll_steps: 6
+  jd_scroll_wait_ms: 800
+  jd_price_wait_ms: 6000
+  image:
+    enabled: false
+    max_bytes: 15728640
+    timeout_seconds: 20
+  keywords:
+  - keyword: 葫芦兄弟
+    ip_code: huluxiongdi
+  output_dir: /workspace/ip-monitor/crawler/samples
+  log_dir: /workspace/ip-monitor/crawler/samples/logs
+  state_dir: /workspace/ip-monitor/crawler/samples/state
+security:
+  profile_dir: /workspace/ip-monitor/crawler/samples/profiles/{platform}
+  profile_key_env: CLUE_PROFILE_KEY
+exclude:
+  genuine_keywords:
+  - 官方旗舰店
+  - 正版授权
+  - 品牌授权
+  - 官方正品
+  - 防伪
+  genuine_shop_labels:
+  - 京东自营
+  categories: []
+whitelist_file: whitelist.csv
+dedup:
+  suppress_statuses:
+  - 已确认
+  - 已录入SaaS
+  - 驳回
+  suppress_days: 90
+  suppress_days_rejected: 30
+legal_hints:
+- keywords:
+  - 书评
+  - 教程
+  - 解析
+  hint: 可能涉及合理使用，请人工判断
+text_score:
+  weights:
+    ip_hit: 45
+    variant_hit: 12
+    carrier_hit: 16
+    category_hit: 10
+    white_label_shop: 6
+    brand_official: -25
+    genuine_signal: -55
+    other_ip_only: -30
+    other_ip_also: -18
+    no_ip: -8
+    short_title: -20
+  short_title_len: 8
+  level:
+    high: 60
+    medium: 35
+  vision_rescue_min: 12
+  words:
+    carrier:
+    - 印花
+    - 图案
+    - 公仔
+    - 挂件
+    - 手机壳
+    - 贴纸
+    - 徽章
+    - 抱枕
+    - 玩偶
+    category:
+    - 童装
+    - 卫衣
+    - 睡衣
+    - 文具
+    - 箱包
+    - 水杯
+    - 床品
+    white_label:
+    - 制衣
+    - 服饰厂
+    - 供应链
+    - 工厂店
+    - 批发
+    - 商行
+    brand_official:
+    - 正版
+    - 官方
+    other_ips:
+    - 示例其他IP
+visual:
+  confirm: 70
+  reject: 25
+  reuse_by_phash: true
+combined:
+  w_text: 0.45
+  w_visual: 0.55
+  floor_on_confirm: 75
+  cap_on_reject: 35
+  min_final_score: 35
+amount:
+  comment_multiplier: 10
+  fuzzy_use_lower_bound: true
+  on_sales_missing: comments_x_multiplier
+  on_comments_missing: use_sales
+  decimals: 2
+aggregate:
+  key:
+  - platform
+  - shop_id
+  shop_threshold: 500000
+  same_day_only: true
+  count_delisted: false
+fetch:
+  taobao:
+    detail_min_text_score: 35
+  jd:
+    near_band_low: 0.6
+    near_band_high: 1.0
+shop_type_mapping:
+  天猫: 企业
+  旗舰店: 企业
+  专卖店: 企业
+  京东POP: 未知
+  1688实力商家: 企业
+  个体工商户: 个体户
+  个人店: 个人
+shop_type_priority:
+- 企业
+- 个体户
+- 未知
+- 个人
+payment_ability:
+  signals:
+    listed_or_soe: true
+    investor_shareholder: true
+    registered_capital_min: 10000000
+    has_patent_or_app: true
+    tmall_or_crown_shop: true
+    enterprise_shop: true
+confidence:
+  base: weighted_final_by_amount
+  adjust:
+    has_missing_field: -10
+    all_visual_confirmed: 10
+alert:
+  min_items_per_platform: 50
+  email_to:
+  - wuhengxuan@ip-sky.cn
+  smtp:
+    host: smtp.qiye.aliyun.com
+    port: 465
+    ssl: true
+    sender: wuhengxuan@ip-sky.cn
+    auth_code_encrypted: 待 Xuan 在与后端的 1:1 中提供
